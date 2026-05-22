@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Winner -->
+        <TextView
+            android:id="@+id/tvMatchWinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#2196F3"
+            android:text="🏆 Player 1 MENANG"/>
+
+        <!-- Total Score -->
+        <TextView
+            android:id="@+id/tvMatchScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:text="Player 1  2 - 0  Player 2"/>
+
+        <!-- Set Detail -->
+        <TextView
+            android:id="@+id/tvMatchSetDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#4CAF50"
+            android:layout_marginTop="4dp"
+            android:text="Set 1: 6-4  |  Set 2: 6-3"/>
+
+        <!-- Format & Date -->
+        <TextView
+            android:id="@+id/tvMatchInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#888888"
+            android:layout_marginTop="4dp"
+            android:text="Best of 3 • 15 May 2026"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -15,9 +15,8 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "tennis_db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 4;
 
-    // Tabel Ranking
     private static final String TABLE_RANKING = "ranking";
     private static final String COL_ID = "id";
     private static final String COL_POSITION = "position";
@@ -27,7 +26,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL_COUNTRY = "country";
     private static final String COL_BIRTHDAY = "birthday";
 
-    // Tabel Tournament
     private static final String TABLE_TOURNAMENT = "tournament";
     private static final String COL_TOUR_ID = "id";
     private static final String COL_TOUR_NAME = "name";
@@ -35,6 +33,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL_TOUR_TIER = "tier";
     private static final String COL_TOUR_COURT = "court";
     private static final String COL_TOUR_COUNTRY = "country";
+
+    private static final String TABLE_MATCH = "match_history";
+    private static final String COL_MATCH_ID = "id";
+    private static final String COL_MATCH_P1 = "player1";
+    private static final String COL_MATCH_P2 = "player2";
+    private static final String COL_MATCH_P1_SETS = "p1_sets";
+    private static final String COL_MATCH_P2_SETS = "p2_sets";
+    private static final String COL_MATCH_FORMAT = "format";
+    private static final String COL_MATCH_WINNER = "winner";
+    private static final String COL_MATCH_DATE = "date";
+    private static final String COL_MATCH_SET_SCORES = "set_scores";
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -59,14 +68,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COL_TOUR_COURT + " TEXT, "
                 + COL_TOUR_COUNTRY + " TEXT)";
 
+        String createMatch = "CREATE TABLE " + TABLE_MATCH + " ("
+                + COL_MATCH_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COL_MATCH_P1 + " TEXT, "
+                + COL_MATCH_P2 + " TEXT, "
+                + COL_MATCH_P1_SETS + " INTEGER, "
+                + COL_MATCH_P2_SETS + " INTEGER, "
+                + COL_MATCH_FORMAT + " TEXT, "
+                + COL_MATCH_WINNER + " TEXT, "
+                + COL_MATCH_DATE + " TEXT, "
+                + COL_MATCH_SET_SCORES + " TEXT)";
+
         db.execSQL(createRanking);
         db.execSQL(createTournament);
+        db.execSQL(createMatch);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RANKING);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TOURNAMENT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MATCH);
         onCreate(db);
     }
 
@@ -98,13 +120,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 PlayerRanking item = new PlayerRanking();
-                item.setId(cursor.getLong(cursor.getColumnIndexOrThrow(COL_ID)));
+                item.setId(cursor.getLong(
+                        cursor.getColumnIndexOrThrow(COL_ID)));
                 item.setPosition(cursor.getInt(
                         cursor.getColumnIndexOrThrow(COL_POSITION)));
                 item.setPoint(cursor.getInt(
                         cursor.getColumnIndexOrThrow(COL_POINT)));
 
-                PlayerRanking.PlayerDetail player = new PlayerRanking.PlayerDetail();
+                PlayerRanking.PlayerDetail player =
+                        new PlayerRanking.PlayerDetail();
                 player.setId(cursor.getInt(
                         cursor.getColumnIndexOrThrow(COL_PLAYER_ID)));
                 player.setName(cursor.getString(
@@ -117,7 +141,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 country.setName(cursor.getString(
                         cursor.getColumnIndexOrThrow(COL_COUNTRY)));
                 player.setCountry(country);
-
                 item.setPlayer(player);
                 list.add(item);
             } while (cursor.moveToNext());
@@ -150,7 +173,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Tournament> getTournaments() {
         List<Tournament> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_TOURNAMENT, null);
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TABLE_TOURNAMENT, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -173,7 +197,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 country.setName(cursor.getString(
                         cursor.getColumnIndexOrThrow(COL_TOUR_COUNTRY)));
                 item.setCountry(country);
-
                 list.add(item);
             } while (cursor.moveToNext());
         }
@@ -184,7 +207,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean isRankingEmpty() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_RANKING, null);
+        Cursor cursor = db.rawQuery(
+                "SELECT COUNT(*) FROM " + TABLE_RANKING, null);
         cursor.moveToFirst();
         int count = cursor.getInt(0);
         cursor.close();
@@ -201,5 +225,67 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return count == 0;
+    }
+
+    // ===== MATCH HISTORY =====
+
+    public void saveMatch(String p1, String p2, int p1Sets,
+                          int p2Sets, String format,
+                          String winner, String setScores) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_MATCH_P1, p1);
+        cv.put(COL_MATCH_P2, p2);
+        cv.put(COL_MATCH_P1_SETS, p1Sets);
+        cv.put(COL_MATCH_P2_SETS, p2Sets);
+        cv.put(COL_MATCH_FORMAT, format);
+        cv.put(COL_MATCH_WINNER, winner);
+        cv.put(COL_MATCH_DATE, new java.util.Date().toString());
+        cv.put(COL_MATCH_SET_SCORES, setScores);
+        db.insert(TABLE_MATCH, null, cv);
+        db.close();
+    }
+
+    public List<String[]> getMatchHistory() {
+        List<String[]> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TABLE_MATCH +
+                        " ORDER BY " + COL_MATCH_ID + " DESC", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String[] match = new String[9];
+                match[0] = String.valueOf(cursor.getInt(
+                        cursor.getColumnIndexOrThrow(COL_MATCH_ID)));
+                match[1] = cursor.getString(
+                        cursor.getColumnIndexOrThrow(COL_MATCH_P1));
+                match[2] = cursor.getString(
+                        cursor.getColumnIndexOrThrow(COL_MATCH_P2));
+                match[3] = String.valueOf(cursor.getInt(
+                        cursor.getColumnIndexOrThrow(COL_MATCH_P1_SETS)));
+                match[4] = String.valueOf(cursor.getInt(
+                        cursor.getColumnIndexOrThrow(COL_MATCH_P2_SETS)));
+                match[5] = cursor.getString(
+                        cursor.getColumnIndexOrThrow(COL_MATCH_FORMAT));
+                match[6] = cursor.getString(
+                        cursor.getColumnIndexOrThrow(COL_MATCH_WINNER));
+                match[7] = cursor.getString(
+                        cursor.getColumnIndexOrThrow(COL_MATCH_DATE));
+                match[8] = cursor.getString(
+                        cursor.getColumnIndexOrThrow(
+                                COL_MATCH_SET_SCORES));
+                list.add(match);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+
+    public void deleteAllMatches() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_MATCH, null, null);
+        db.close();
     }
 }

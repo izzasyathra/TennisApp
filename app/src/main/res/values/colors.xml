@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Primary Green -->
+    <color name="primary">#1E3A1E</color>
+    <color name="primary_dark">#142814</color>
+    <color name="primary_light">#7ED321</color>
+    <color name="accent">#7ED321</color>
+
+    <!-- Background -->
+    <color name="background_dark">#1A2E1A</color>
+    <color name="background_card">#243824</color>
+    <color name="background_light">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#A5C8A5</color>
+    <color name="text_dark">#1E3A1E</color>
+    <color name="text_hint">#6B8F6B</color>
+
+    <!-- Status -->
+    <color name="win_color">#7ED321</color>
+    <color name="lose_color">#FF5252</color>
+    <color name="draw_color">#FFB300</color>
+
+    <!-- Badge -->
+    <color name="badge_hard">#2196F3</color>
+    <color name="badge_clay">#FF5722</color>
+    <color name="badge_grass">#4CAF50</color>
+    <color name="badge_grand_slam">#FFB300</color>
+
+    <!-- Nav -->
+    <color name="nav_background">#1A2E1A</color>
+    <color name="nav_active">#7ED321</color>
+    <color name="nav_inactive">#6B8F6B</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
 </resources>

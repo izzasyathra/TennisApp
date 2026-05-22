@@ -15,4 +15,14 @@
         android:name="com.example.tennisapp.fragment.TournamentFragment"
         android:label="Tournament"/>
 
+    <fragment
+        android:id="@+id/calculatorFragment"
+        android:name="com.example.tennisapp.fragment.CalculatorFragment"
+        android:label="Calculator"/>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.tennisapp.fragment.HistoryFragment"
+        android:label="History"/>
+
 </navigation>
