@@ -38,6 +38,3 @@ Aplikasi ini dibangun dengan standar pengembangan Android modern:
 3. Pastikan perangkat/emulator terhubung dengan internet untuk pengambilan data API pertama kali.
 4. Lakukan Registrasi akun, kemudian Login.
 5. Selamat menggunakan TennisApp!
-
----
-*Proyek ini dibuat untuk memenuhi spesifikasi teknis pengembangan aplikasi Android.*
